@@ -7,7 +7,27 @@ Le jeu de données utilisé est disponible ici : https://github.com/BIGMOUSSA/Pr
 # Plan de travail
 
 ## Preporocessing du dataset
-Le prétraitement a consisté à vérifier si le fichier contenait des doublons et à examiner les relations entre certaines variables. Nous avons constaté que les deux fichiers mis à notre disposition ne contenaient pas de doublons. Nous avons également remarqué que la variable "Adj_close" contenait exactement les mêmes valeurs que "Close", nous l'avons donc supprimée. À la fin du prétraitement, nous avons créé un dossier appelé "Cleaned_data" contenant deux fichiers, 'Training.csv' et 'Testing.csv', qui seront ensuite utilisés pour l'entraînement et l'évaluation du modèle.
+
+
+1. **Chargement des Données :**
+   Les données sont chargées à partir de fichiers CSV contenant les informations du marché boursier, notamment les colonnes de date, d'ouverture, de fermeture, de plus haut, de plus bas et de volume.
+
+2. **Conversion des Colonnes de Date :**
+   La colonne de date est convertie en format datetime pour faciliter la manipulation temporelle.
+
+3. **Vérification des Valeurs Manquantes :**
+   Une vérification est effectuée pour détecter la présence de valeurs manquantes dans les données. Aucune donnée manquante n'a été identifiée dans l'échantillon d'entraînement ou de test.
+
+4. **Suppression de Colonnes Redondantes :**
+   Une analyse comparative révèle que la colonne "Close" et la colonne "Adj Close" sont identiques. Par conséquent, la colonne "Adj Close" est supprimée pour simplifier les données.
+
+5. **Visualisation des Données :**
+   Des graphiques de dispersion sont créés pour visualiser l'évolution du volume, des prix d'ouverture, de fermeture, du plus haut et du plus bas au fil du temps.
+
+6. **Enregistrement des Données Nettoyées :**
+   Les données nettoyées sont enregistrées dans de nouveaux fichiers CSV ("cleaned_data/Training.csv" et "cleaned_data/test.csv") pour une utilisation ultérieure dans l'analyse financière.
+
+
 ## Définir l’environnement
 En apprentissage par renforcement (Reinforcement Learning), un environnement est généralement défini comme le cadre dans lequel un agent interagit pour apprendre. L'environnement représente le monde dans lequel l'agent opère, et il est caractérisé par les états possibles dans lesquels l'agent peut se trouver, les actions que l'agent peut entreprendre, les récompenses associées à certaines transitions état-action, et éventuellement les probabilités de transition entre les états.
 
@@ -58,8 +78,48 @@ Au fur et à mesure, l'agent apprend la politique optimale, c'est à dire quelle
 
 En résumé, l'agent est l'entité autonome qui apprend par essais-erreurs à interagir de façon optimale dans l'environnement.
 
-## Entrainement du modèle ( Q-learning , tensorflow)
+## Entrainement du modèle (Q-learning)
 
-## Evaluation du modèle
+Ce code a été développé pour entraîner un agent de trading utilisant l'apprentissage par renforcement (Q-learning) sur des données du marché financier. L'agent est conçu pour prendre des décisions d'achat, de vente ou de maintien de position en fonction de son apprentissage sur les données historiques.
 
-## Optimisation  des paramètres
+1. **Chargement des Données :**
+    Les données d'entraînement sont chargées à partir du fichier CSV "cleaned_data/training.csv". 
+
+2. **Initialisation de l'Environnement :**
+   Créez une instance de l'environnement de trading en utilisant la classe `TradingEnv` fournie. L'environnement prend les données chargées comme argument.
+
+   ```python
+   import pandas as pd
+   from env import TradingEnv
+   from agent import TradingQAgent
+
+   # Charger les données
+   data = pd.read_csv('cleaned_data/training.csv', index_col=0)
+
+   # Initialiser l'environnement
+   tradingenv = TradingEnv(data)
+   ```
+
+3. **Initialisation de l'Agent :**
+   Créez une instance de l'agent de trading en utilisant la classe `TradingQAgent`. Vous pouvez ajuster les hyperparamètres de l'agent selon vos besoins.
+
+   ```python
+   # Initialiser l'agent
+   Tradingagent = TradingQAgent(tradingenv)
+   ```
+
+4. **Entraînement de l'Agent :**
+   Lancez l'entraînement de l'agent en utilisant la méthode `train`. Spécifiez le nombre d'épisodes d'entraînement que vous souhaitez exécuter.
+
+   ```python
+   # Entraîner l'agent
+   Tradingagent.train(100)
+   ```
+
+5. **Test de l'Agent :**
+   Vous pouvez évaluer les performances de l'agent en utilisant la méthode `test`. Spécifiez le nombre d'épisodes de test que vous souhaitez exécuter.
+
+   ```python
+   # Tester l'agent
+   Tradingagent.test(5)
+   ```

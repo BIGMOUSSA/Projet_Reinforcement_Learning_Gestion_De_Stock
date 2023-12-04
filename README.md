@@ -8,6 +8,7 @@ Le jeu de données utilisé est disponible ici : https://github.com/BIGMOUSSA/Pr
 
 ## Preporocessing du dataset
 
+
 1. **Chargement des Données :**
    Les données sont chargées à partir de fichiers CSV contenant les informations du marché boursier, notamment les colonnes de date, d'ouverture, de fermeture, de plus haut, de plus bas et de volume.
 

@@ -52,13 +52,14 @@ class ForexDQNAgent:
            score = 0 
            
            while not done:
-               action = self.dqn_agent.forward(state)  
+               action = self.dqn_agent.forward([state])  
                next_state, reward, done, _ = self.env.step(action)
                
                self.dqn_agent.step(state, action, reward, next_state, done)  
                
                state = next_state
                score += reward
+               print("Score ", score)
                
            print("Episode :", e+1, "Score :", score)
            
@@ -69,7 +70,7 @@ class ForexDQNAgent:
             state = self.env.reset()
             
             while not done:
-                action = np.argmax(self.q_table.loc[tuple(state)])
+                action = np.argmax(self.dqn_agent.model.predict(np.array([state])))
                 state, reward, done, _ = self.env.step(action)
                 
                 score += reward

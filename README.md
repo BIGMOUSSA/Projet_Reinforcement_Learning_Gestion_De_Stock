@@ -59,7 +59,7 @@ Au fur et à mesure, l'agent apprend la politique optimale, c'est à dire quelle
 En résumé, l'agent est l'entité autonome qui apprend par essais-erreurs à interagir de façon optimale dans l'environnement.
 
 ## Entrainement du modèle ( Q-learning , tensorflow)
-
+Pour entrainer le model, il su
 ## Evaluation du modèle
 
 ## Optimisation  des paramètres

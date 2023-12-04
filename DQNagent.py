@@ -1,79 +1,58 @@
+# agent.py
+
+import keras
+from keras.models import Sequential
+from keras.models import load_model
+from keras.layers import Dense
+from keras.optimizers import Adam
 import numpy as np
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten
-from tensorflow.keras.optimizers import Adam
+from collections import deque
+import random
+import math
 
-from rl.agents import DQNAgent
-from rl.policy import BoltzmannQPolicy
-from rl.memory import SequentialMemory
+class Agent:
+    """Reinforcement Learning Agent for Stock Trading"""
+
+    def __init__(self, state_size, is_eval=False, model_name=""):
+        self.state_size = state_size
+        self.action_size = 3  # sit, buy, sell
+        self.memory = deque(maxlen=1000)
+        self.inventory = []
+        self.model_name = model_name
+        self.is_eval = is_eval
+        self.gamma = 0.95
+        self.epsilon = 1.0
+        self.epsilon_min = 0.01
+        self.epsilon_decay = 0.995
+        self.model = load_model(model_name) if is_eval else self._model()
+
+    def _model(self):
+        model = Sequential()
+        model.add(Dense(units=64, input_dim=self.state_size, activation="relu"))
+        model.add(Dense(units=32, activation="relu"))
+        model.add(Dense(units=8, activation="relu"))
+        model.add(Dense(self.action_size, activation="linear"))
+        model.compile(loss="mse", optimizer=Adam(lr=0.001))
+        return model
+
+    def act(self, state):
+        if not self.is_eval and random.random() <= self.epsilon:
+            return random.randrange(self.action_size)
+        options = self.model.predict(state)
+        return np.argmax(options[0])
+
+    def expReplay(self, batch_size):
+        mini_batch = list(self.memory)[-batch_size:]
+        for state, action, reward, next_state, done in mini_batch:
+            target = reward
+            if not done:
+                target = reward + self.gamma * np.amax(self.model.predict(next_state)[0])
+            target_f = self.model.predict(state)
+            target_f[0][action] = target
+            self.model.fit(state, target_f, epochs=1, verbose=0)
+        if self.epsilon > self.epsilon_min:
+            self.epsilon *= self.epsilon_decay
 
 
-class ForexDQNAgent:
-    def __init__(self, env):
-        self.env = env
-
-        # Paramètres DQN
-        self.learning_rate = 0.001
-        
-        # Création du modèle DQN
-        self.model = self.create_model()  
-        
-        # Politique d'exploration de Boltzmann
-        self.policy = BoltzmannQPolicy()
-        
-        # Mémoire séquentielle
-        self.memory = SequentialMemory(limit=1000, window_length=1)
-        
-        # Configuration de l'agent DQN
-        self.dqn_agent = DQNAgent(model=self.model, 
-                                   memory=self.memory,
-                                   policy=self.policy, 
-                                   nb_actions=self.env.action_space.n,
-                                   nb_steps_warmup=100,
-                                   target_model_update=1e-2,
-                                   enable_double_dqn=True)
-        self.dqn_agent.compile(Adam(learning_rate=self.learning_rate))
-        
-    def create_model(self):
-       # Création du réseau de neurones 
-       model = Sequential()
-       model.add(Flatten(input_shape=(1,) + self.env.observation_space.shape))
-       model.add(Dense(16, activation='relu'))
-       model.add(Dense(16, activation='relu'))
-       model.add(Dense(self.env.action_space.n, activation='linear'))
-       
-       return model
-       
-    def train(self, episodes):
-       for e in range(episodes):
-           state = self.env.reset()
-           done = False
-           score = 0 
-           
-           while not done:
-               action = self.dqn_agent.forward([state])  
-               next_state, reward, done, _ = self.env.step(action)
-               
-               self.dqn_agent.step(state, action, reward, next_state, done)  
-               
-               state = next_state
-               score += reward
-               print("Score ", score)
-               
-           print("Episode :", e+1, "Score :", score)
-           
-    def test(self, episodes):
-       for e in range(episodes):
-            done = False
-            score = 0
-            state = self.env.reset()
-            
-            while not done:
-                action = np.argmax(self.dqn_agent.model.predict(np.array([state])))
-                state, reward, done, _ = self.env.step(action)
-                
-                score += reward
-                
-            print("Test {} Score {}".format(e, score))
-        
+# Other functions (formatPrice, getStockDataVec, sigmoid, getState) from the original code
+# should be moved to a separate file called 'utils.py'.

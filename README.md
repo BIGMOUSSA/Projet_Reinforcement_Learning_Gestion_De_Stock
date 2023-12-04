@@ -7,7 +7,7 @@ Le jeu de données utilisé est disponible ici : https://github.com/BIGMOUSSA/Pr
 # Plan de travail
 
 ## Preporocessing du dataset
-
+Le prétraitement a consisté à vérifier si le fichier contenait des doublons et à examiner les relations entre certaines variables. Nous avons constaté que les deux fichiers mis à notre disposition ne contenaient pas de doublons. Nous avons également remarqué que la variable "Adj_close" contenait exactement les mêmes valeurs que "Close", nous l'avons donc supprimée. À la fin du prétraitement, nous avons créé un dossier appelé "Cleaned_data" contenant deux fichiers, 'Training.csv' et 'Testing.csv', qui seront ensuite utilisés pour l'entraînement et l'évaluation du modèle.
 ## Définir l’environnement
 En apprentissage par renforcement (Reinforcement Learning), un environnement est généralement défini comme le cadre dans lequel un agent interagit pour apprendre. L'environnement représente le monde dans lequel l'agent opère, et il est caractérisé par les états possibles dans lesquels l'agent peut se trouver, les actions que l'agent peut entreprendre, les récompenses associées à certaines transitions état-action, et éventuellement les probabilités de transition entre les états.
 

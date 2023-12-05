@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import warnings
-
+from tqdm import tqdm
 warnings.filterwarnings('ignore')
 
 class TradingQAgent:
@@ -15,7 +15,7 @@ class TradingQAgent:
                                     dtype=np.float64)
                                     
     def train(self, episodes):
-        for e in range(episodes):
+        for e in tqdm(range(episodes), total= len(range(episodes))):
             state = self.env.reset()
             done = False
             score = 0
@@ -30,7 +30,7 @@ class TradingQAgent:
                 score += reward
                 
             self.eps = max(0.01, self.eps*self.decay)        
-            print("Episode {} Score {}".format(e,score))
+            print(" \n Episode {} Score {}".format(e+1,score))
             
             
     def get_action(self, state):

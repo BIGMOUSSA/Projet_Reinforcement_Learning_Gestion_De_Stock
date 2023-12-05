@@ -54,5 +54,4 @@ class Agent:
             self.epsilon *= self.epsilon_decay
 
 
-# Other functions (formatPrice, getStockDataVec, sigmoid, getState) from the original code
-# should be moved to a separate file called 'utils.py'.
+

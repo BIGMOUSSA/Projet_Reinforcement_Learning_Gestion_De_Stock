@@ -1,85 +1,45 @@
-# Stock Prediction System
-Mise en œuvre de l'apprentissage par renforcement Q-learning pour le trading à court terme sur actions. Le modèle détermine si la meilleure action à prendre est de rester en position, de vendre ou d'acheter.
+# Stock Prediction System - README
 
-# Dataset
-Le jeu de données utilisé est disponible ici : https://github.com/BIGMOUSSA/Projet_Reinforcement_Learning_Gestion_De_Stock/tree/main/cleaned_data
+## Prétraitement du jeu de données
 
-# Plan de travail
+### Chargement des Données
 
-## Preporocessing du dataset
+Les données du marché boursier sont chargées à partir de fichiers CSV disponibles [ici](https://github.com/BIGMOUSSA/Projet_Reinforcement_Learning_Gestion_De_Stock/tree/main/cleaned_data). Ces fichiers comprennent des informations telles que la date, l'ouverture, la fermeture, le plus haut, le plus bas et le volume.
 
+### Conversion des Colonnes de Date
 
-1. **Chargement des Données :**
-   Les données sont chargées à partir de fichiers CSV contenant les informations du marché boursier, notamment les colonnes de date, d'ouverture, de fermeture, de plus haut, de plus bas et de volume.
+La colonne de date est convertie en format datetime pour simplifier la manipulation temporelle.
 
-2. **Conversion des Colonnes de Date :**
-   La colonne de date est convertie en format datetime pour faciliter la manipulation temporelle.
+### Vérification des Valeurs Manquantes
 
-3. **Vérification des Valeurs Manquantes :**
-   Une vérification est effectuée pour détecter la présence de valeurs manquantes dans les données. Aucune donnée manquante n'a été identifiée dans l'échantillon d'entraînement ou de test.
+Une vérification est effectuée pour détecter les valeurs manquantes. Aucune donnée manquante n'a été identifiée dans l'échantillon d'entraînement ou de test.
 
-4. **Suppression de Colonnes Redondantes :**
-   Une analyse comparative révèle que la colonne "Close" et la colonne "Adj Close" sont identiques. Par conséquent, la colonne "Adj Close" est supprimée pour simplifier les données.
+### Suppression de Colonnes Redondantes
 
-5. **Visualisation des Données :**
-   Des graphiques de dispersion sont créés pour visualiser l'évolution du volume, des prix d'ouverture, de fermeture, du plus haut et du plus bas au fil du temps.
+Une analyse comparative révèle que les colonnes "Close" et "Adj Close" sont identiques. La colonne "Adj Close" est supprimée pour simplifier les données.
 
-6. **Enregistrement des Données Nettoyées :**
-   Les données nettoyées sont enregistrées dans de nouveaux fichiers CSV ("cleaned_data/Training.csv" et "cleaned_data/test.csv") pour une utilisation ultérieure dans l'analyse financière.
+### Visualisation des Données
 
+Des graphiques de dispersion sont créés pour visualiser l'évolution du volume, des prix d'ouverture, de fermeture, du plus haut et du plus bas au fil du temps.
 
-## Définir l’environnement
-En apprentissage par renforcement (Reinforcement Learning), un environnement est généralement défini comme le cadre dans lequel un agent interagit pour apprendre. L'environnement représente le monde dans lequel l'agent opère, et il est caractérisé par les états possibles dans lesquels l'agent peut se trouver, les actions que l'agent peut entreprendre, les récompenses associées à certaines transitions état-action, et éventuellement les probabilités de transition entre les états.
+### Enregistrement des Données Nettoyées
 
-Pour le trading à court terme sur actions, l'environnement d'apprentissage par renforcement peut être défini de la manière suivante :
+Les données nettoyées sont enregistrées dans de nouveaux fichiers CSV ("cleaned_data/Training.csv" et "cleaned_data/test.csv") pour une utilisation ultérieure dans l'analyse financière.
 
-**Etats (S)** :
-- Comptes de trading (solde monétaire actuel, profits/pertes cumulés)
-- Données de marché (prix des devises, volumes de trading, indicateurs techniques, etc.)
-- Positions ouvertes
-- Informations économiques et géopolitiques 
+## Définition de l'environnement
 
-**Actions (A)** :
-- Acheter / Vendre une certaine quantité d'une devise
-- Fermer ou ajuster une position ouverte  
-- Ne rien faire
+En apprentissage par renforcement, l'environnement est défini comme le cadre dans lequel l'agent interagit pour apprendre. Pour le trading à court terme sur actions, l'environnement est caractérisé par les états (comptes de trading, données de marché, positions ouvertes, informations économiques), les actions possibles (acheter, vendre, ne rien faire), les récompenses (variation de la valeur nette), les transitions (évolution stochastique des prix) et les observations (données de marché visibles par l'agent).
 
-**Récompenses (R)** :  
-- Variation de la valeur nette du compte de trading (profits/pertes réalisés)
-- Commissions, spreads, frais de transactions
+L'objectif de l'agent est de maximiser ses profits en apprenant à effectuer les meilleures actions en fonction des états observés.
 
-**Transitions (P)** : 
-- Evolution stochastique des prix des devises en fonction des actions de l'agent et des autres acteurs du marché
+## Définition de l'Agent
 
-**Observations (O)** :
-- Données de marché visibles par l'agent (taille de l'historique, granularité, etc.)
+En apprentissage par renforcement, l'agent est l'entité qui interagit avec l'environnement pour apprendre à résoudre une tâche. Les caractéristiques principales d'un agent de RL sont sa capacité à percevoir l'état actuel de l'environnement, choisir et exécuter des actions, et apprendre grâce aux récompenses reçues pour maximiser ses performances à long terme.
 
-Ainsi l'objectif de l'agent sera de maximiser ses profits en trading sur le marché forex de manière automatisée en apprenant à effectuer les meilleures actions en fonction des états observés.
+Deux solutions sont proposées :
 
-## Définir l'agent
-Dans le contexte de l'apprentissage par renforcement (Reinforcement Learning), un agent désigne l'entité qui va interagir avec l'environnement pour apprendre à résoudre une tâche.
+1. **Q-Learning avec Exploration-Exploitation (agent.py)** : Utilise le Q-Learning en explorant l'environnement, mappant 'state' et 'q_value', et combinant exploration et exploitation. Adapté aux environnements petits et discrets. Pour tester, exécutez **main.py** en spécifiant le nombre d'épisodes et/ou le chemin du fichier. Options par défaut : `python main.py` ou `python main.py --episode 10 --path_data "cleaned_data/Training.csv"`.
 
-Les principales caractéristiques d'un agent de RL sont :
+2. **DQN Agent (DQNagent.py)** : Utilise les réseaux de neurones pour l'entraînement. Lancez **main2.py**, choisissez le nombre d'épisodes et optez pour le fichier d'entraînement (option 1) ou de test (option 2). Exemple : `python main2.py`.
 
-- Il peut percevoir l'état courant de l'environnement (observations)
-- Il peut choisir et exécuter des actions qui vont influer sur l'environnement 
-- Il a pour objectif d'apprendre grâce aux récompenses reçues à maximiser ses performances à long terme (cumul de récompenses)
-
-Dans notre cas:
-
-- L'environnement est le marché financier simulé par la classe `ForexEnv` 
-- L'agent est `ForexDQNAgent` ou `ForexQAgent`
-- A chaque pas de temps, l'agent:
-    - Observe l'état courant (cours des devises, solde etc.)
-    - Choisi une action (acheter, vendre, ne rien faire)
-    - Reçoit une récompense (variation de la valeur nette)
-    
-Au fur et à mesure, l'agent apprend la politique optimale, c'est à dire quelle action choisir dans chaque état observé pour maximiser ses profits.
-
-En résumé, l'agent est l'entité autonome qui apprend par essais-erreurs à interagir de façon optimale dans l'environnement.
-
-## Entrainement du modèle ( Q-learning , tensorflow)
-
-## Evaluation du modèle
-
-## Optimisation  des paramètres
+Ces solutions offrent des approches différentes pour entraîner l'agent en fonction de la nature de l'environnement et des données.

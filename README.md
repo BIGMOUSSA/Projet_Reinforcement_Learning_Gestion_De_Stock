@@ -26,6 +26,16 @@ Des graphiques de dispersion sont créés pour visualiser l'évolution du volume
 
 Les données nettoyées sont enregistrées dans de nouveaux fichiers CSV ("cleaned_data/Training.csv" et "cleaned_data/test.csv") pour une utilisation ultérieure dans l'analyse financière.
 
+## Installation des Dépendances
+
+Installez les dépendances nécessaires en exécutant la commande suivante :
+
+```bash
+pip install -r requirements.txt
+```
+
+Cela garantira que toutes les bibliothèques requises sont correctement installées avant d'exécuter les scripts.
+
 ## Définition de l'environnement
 
 En apprentissage par renforcement, l'environnement est défini comme le cadre dans lequel l'agent interagit pour apprendre. Pour le trading à court terme sur actions, l'environnement est caractérisé par les états (comptes de trading, données de marché, positions ouvertes, informations économiques), les actions possibles (acheter, vendre, ne rien faire), les récompenses (variation de la valeur nette), les transitions (évolution stochastique des prix) et les observations (données de marché visibles par l'agent).
@@ -39,7 +49,16 @@ En apprentissage par renforcement, l'agent est l'entité qui interagit avec l'en
 Deux solutions sont proposées :
 
 1. **Q-Learning avec Exploration-Exploitation (agent.py)** : Utilise le Q-Learning en explorant l'environnement, mappant 'state' et 'q_value', et combinant exploration et exploitation. Adapté aux environnements petits et discrets. Pour tester, exécutez **main.py** en spécifiant le nombre d'épisodes et/ou le chemin du fichier. Options par défaut : `python main.py` ou `python main.py --episode 10 --path_data "cleaned_data/Training.csv"`.
+```bash
+python main.py
+```
+ou
+```bash
+python main.py --episode 10 --path_data "cleaned_data/Training.csv"
+```
 
 2. **DQN Agent (DQNagent.py)** : Utilise les réseaux de neurones pour l'entraînement. Lancez **main2.py**, choisissez le nombre d'épisodes et optez pour le fichier d'entraînement (option 1) ou de test (option 2). Exemple : `python main2.py`.
-
-Ces solutions offrent des approches différentes pour entraîner l'agent en fonction de la nature de l'environnement et des données.
+```bash
+python main2.py
+```
+L'application vous demandera le nombre d'épisodes pour l'entraînement et le choix du fichier (option 1 pour l'entraînement, option 2 pour le test).
